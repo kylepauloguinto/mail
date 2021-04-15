@@ -36,7 +36,7 @@ def compose(request):
         return JsonResponse({
             "error": "At least one recipient required."
         }, status=400)
-
+    print("hi")
     # Convert email addresses to users
     recipients = []
     for email in emails:
