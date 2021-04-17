@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // By default, load the inbox
   load_mailbox('inbox');
+
 });
 
 function compose_email() {
@@ -50,6 +51,7 @@ function compose_email() {
 function load_mailbox(mailbox) {
 
   const div = document.createElement('div');
+  const emailView = document.querySelector('#emails-view');
   div.setAttribute('class','list-group');
 
   // Show the mailbox and hide other views
@@ -57,8 +59,8 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
   
   // Show the mailbox name
-  document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
-  document.querySelector('#emails-view').append(div);
+  emailView.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+  emailView.append(div);
 
   if( mailbox === 'inbox' ){
     fetch('/emails/inbox')
@@ -67,24 +69,88 @@ function load_mailbox(mailbox) {
       email.forEach(element => {
         
         const a = document.createElement('a');
-        const label1 = document.createElement('label');
-        const label2 = document.createElement('label');
-        const label3 = document.createElement('label');
-        a.setAttribute('class','list-group-item list-group-item-action');
-        label1.setAttribute('class','col-lg-4');
-        label2.setAttribute('class','col-lg-4');
-        label3.setAttribute('class','col-lg-4 text-right');
+        const labelSender = document.createElement('label');
+        const labelSubject = document.createElement('label');
+        const labelTimestamp = document.createElement('label');
+        a.setAttribute('class','list-group-item list-group-item-action inbx-clck');
+        a.setAttribute('data-id', element.id);
+        labelSender.setAttribute('class','col-lg-4');
+        labelSubject.setAttribute('class','col-lg-4');
+        labelTimestamp.setAttribute('class','col-lg-4 text-right');
 
-        label1.innerHTML = element.sender;
-        label2.innerHTML = element.subject;
-        label3.innerHTML = element.timestamp;
-        a.append(label1);
-        a.append(label2);
-        a.append(label3);
+        labelSender.innerHTML = element.sender;
+        labelSubject.innerHTML = element.subject;
+        labelTimestamp.innerHTML = element.timestamp;
+        a.append(labelSender);
+        a.append(labelSubject);
+        a.append(labelTimestamp);
         div.append(a);
       });
+
       console.log(email);
+
+      document.querySelectorAll('.inbx-clck').forEach( function(a){
+        a.onclick = function(){
+          
+          const id = a.dataset.id;
+          document.querySelector('#emails-view').innerHTML = ""
+
+          fetch(`/emails/${id}`)
+          .then(response => response.json())
+          .then(emailContents => {
+
+            let recipients = '';
+            let i = 1;
+            emailContents.recipients.forEach( value => {
+              recipients += value ; 
+              if(emailContents.recipients.length > i){
+                recipients += ', ';
+              }
+              i++;
+            });
+
+            const labelMailContentSender = document.createElement('label');
+            const labelMailContentRecipients = document.createElement('label');
+            const labelMailContentSubject = document.createElement('label');
+            const labelMailContentTimestamp = document.createElement('label');
+            const labelMailContentButtonReply = document.createElement('button');
+            const labelMailContentButtonArchived = document.createElement('button');
+            const labelMailContentDivCard = document.createElement('div');
+            const labelMailContentDivCardBody = document.createElement('div');
+
+            labelMailContentSender.setAttribute('class','col-lg-12 pl-0');
+            labelMailContentRecipients.setAttribute('class','col-lg-12 pl-0');
+            labelMailContentSubject.setAttribute('class','col-lg-12 pl-0');
+            labelMailContentTimestamp.setAttribute('class','col-lg-12 pl-0');
+            labelMailContentButtonReply.setAttribute('class','btn btn-outline-primary cstm-mrgn');
+            labelMailContentButtonArchived.setAttribute('class','btn btn-outline-primary cstm-mrgn');
+            labelMailContentDivCard.setAttribute('class','card');
+            labelMailContentDivCardBody.setAttribute('class','card-body');
+
+            labelMailContentSender.innerHTML = '<label style="font-weight : bold">From :&nbsp;</label>' + emailContents.sender;
+            labelMailContentRecipients.innerHTML = '<label style="font-weight : bold">To :&nbsp;</label>' + recipients;
+            labelMailContentSubject.innerHTML = '<label style="font-weight : bold">Subject :&nbsp;</label>' + emailContents.subject;
+            labelMailContentTimestamp.innerHTML = '<label style="font-weight : bold">Timestamp :&nbsp;</label>' + emailContents.timestamp;
+            labelMailContentButtonReply.innerHTML = 'Reply';
+            labelMailContentButtonArchived.innerHTML = 'Archive';
+            labelMailContentDivCardBody.innerHTML = emailContents.body;
+
+            labelMailContentDivCard.append(labelMailContentDivCardBody);
+            emailView.append(labelMailContentButtonReply);
+            emailView.append(labelMailContentButtonArchived);
+            emailView.append(labelMailContentSender);
+            emailView.append(labelMailContentRecipients);
+            emailView.append(labelMailContentSubject);
+            emailView.append(labelMailContentTimestamp);
+            emailView.append(labelMailContentDivCard);
+
+            console.log(emailContents);
+          });
+        }
+      });
+      
     })
   }
 
+  
 }
