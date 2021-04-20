@@ -2,7 +2,7 @@ textarea {
     min-height: 400px;
 }
 
-a:hover,label:hover,.list-group-item:hover {
+.list-group-item a:hover, .list-group-item label:hover,.list-group-item:hover {
     cursor: pointer;
     background-color: rgb(218, 243, 255) ;
 }

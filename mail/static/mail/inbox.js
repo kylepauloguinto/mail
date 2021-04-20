@@ -75,6 +75,24 @@ function reply_email(emailContents){
 
 }
 
+function archive_email(id, archiveStateId){
+
+  let condition = true;
+  if( archiveStateId === 'unarchive'){
+    condition = false;
+  }
+
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: condition
+    })
+  })
+  .then( data => {
+    load_mailbox('inbox');
+  })
+}
+
 function load_mailbox(mailbox) {
 
   const div = document.createElement('div');
@@ -89,8 +107,7 @@ function load_mailbox(mailbox) {
   emailView.innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
   emailView.append(div);
 
-  if( mailbox === 'inbox' ){
-    fetch('/emails/inbox')
+    fetch(`emails/${mailbox}`)
     .then(response => response.json())
     .then(email => {
       email.forEach(element => {
@@ -149,6 +166,12 @@ function load_mailbox(mailbox) {
               i++;
             });
 
+            let archiveStateId = 'archive';
+            let archiveStateTitle = 'Archive';
+            if( emailContents.archived === true ){
+              archiveStateId = 'unarchive';
+              archiveStateTitle = 'Unarchive';
+            }
             const labelMailContentSender = document.createElement('label');
             const labelMailContentRecipients = document.createElement('label');
             const labelMailContentSubject = document.createElement('label');
@@ -165,7 +188,7 @@ function load_mailbox(mailbox) {
             labelMailContentButtonReply.setAttribute('class','btn btn-outline-primary cstm-mrgn');
             labelMailContentButtonReply.setAttribute('id','reply');
             labelMailContentButtonArchived.setAttribute('class','btn btn-outline-primary cstm-mrgn');
-            labelMailContentButtonArchived.setAttribute('id','archive');
+            labelMailContentButtonArchived.setAttribute('id', 'archive' );
             labelMailContentDivCard.setAttribute('class','card');
             labelMailContentDivCardBody.setAttribute('class','card-body');
 
@@ -174,12 +197,14 @@ function load_mailbox(mailbox) {
             labelMailContentSubject.innerHTML = '<label style="font-weight : bold">Subject :&nbsp;</label>' + emailContents.subject;
             labelMailContentTimestamp.innerHTML = '<label style="font-weight : bold">Timestamp :&nbsp;</label>' + emailContents.timestamp;
             labelMailContentButtonReply.innerHTML = 'Reply';
-            labelMailContentButtonArchived.innerHTML = 'Archive';
+            labelMailContentButtonArchived.innerHTML = archiveStateTitle;
             labelMailContentDivCardBody.innerHTML = emailContents.body.replace(/\n\r?/g, '<br />');
 
             labelMailContentDivCard.append(labelMailContentDivCardBody);
             emailView.append(labelMailContentButtonReply);
-            emailView.append(labelMailContentButtonArchived);
+            if( mailbox != 'sent' ){
+              emailView.append(labelMailContentButtonArchived);
+            }
             emailView.append(labelMailContentSender);
             emailView.append(labelMailContentRecipients);
             emailView.append(labelMailContentSubject);
@@ -189,13 +214,13 @@ function load_mailbox(mailbox) {
             console.log(emailContents);
 
             document.querySelector('#reply').addEventListener('click' , () => reply_email(emailContents) );
+            document.querySelector('#archive').addEventListener('click' , () => archive_email(id,archiveStateId) );
 
           });
         }
       });
       
     })
-  }
 
   
 }
