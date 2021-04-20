@@ -2,11 +2,16 @@ textarea {
     min-height: 400px;
 }
 
-a:hover,label:hover {
+a:hover,label:hover,.list-group-item:hover {
     cursor: pointer;
+    background-color: rgb(218, 243, 255) ;
 }
 
 .cstm-mrgn{
     margin-bottom: 30px !important;
     margin-right: 10px !important;
+}
+
+.read{
+  background-color: rgb(212, 212, 212);  
 }

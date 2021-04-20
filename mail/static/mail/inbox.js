@@ -48,6 +48,33 @@ function compose_email() {
   document.querySelector('#compose-body').value = '';
 }
 
+function reply_email(emailContents){
+  
+  let replyDivider = '';
+  let replySubjectHeader = '';
+
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+
+  // Clear out composition fields
+  document.querySelector('#compose-recipients').value = emailContents.sender;
+
+  if ( emailContents.subject.indexOf('Re') === -1 ){
+    replySubjectHeader = 'Re: ';
+  }
+  document.querySelector('#compose-subject').value = `${replySubjectHeader}` + emailContents.subject;
+
+  let i = 0;
+  while( i < 140){
+    replyDivider += '-';
+    i++;
+  }
+  replyDivider += '\n' + 'On ' + emailContents.timestamp + ' ' + emailContents.sender + ' wrote: ';
+  document.querySelector('#compose-body').value = '\n\n' + replyDivider + '\n' + emailContents.body;
+
+}
+
 function load_mailbox(mailbox) {
 
   const div = document.createElement('div');
@@ -72,7 +99,7 @@ function load_mailbox(mailbox) {
         const labelSender = document.createElement('label');
         const labelSubject = document.createElement('label');
         const labelTimestamp = document.createElement('label');
-        a.setAttribute('class','list-group-item list-group-item-action inbx-clck');
+        a.setAttribute('class','list-group-item list-group-item-action inbx-clck read');
         a.setAttribute('data-id', element.id);
         labelSender.setAttribute('class','col-lg-4');
         labelSubject.setAttribute('class','col-lg-4');
@@ -84,6 +111,11 @@ function load_mailbox(mailbox) {
         a.append(labelSender);
         a.append(labelSubject);
         a.append(labelTimestamp);
+
+        if(element.read === false){
+          a.classList.remove('read');
+        }
+
         div.append(a);
       });
 
@@ -92,8 +124,16 @@ function load_mailbox(mailbox) {
       document.querySelectorAll('.inbx-clck').forEach( function(a){
         a.onclick = function(){
           
+
           const id = a.dataset.id;
           document.querySelector('#emails-view').innerHTML = ""
+
+          fetch(`/emails/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                read: true
+            })
+          })
 
           fetch(`/emails/${id}`)
           .then(response => response.json())
@@ -123,7 +163,9 @@ function load_mailbox(mailbox) {
             labelMailContentSubject.setAttribute('class','col-lg-12 pl-0');
             labelMailContentTimestamp.setAttribute('class','col-lg-12 pl-0');
             labelMailContentButtonReply.setAttribute('class','btn btn-outline-primary cstm-mrgn');
+            labelMailContentButtonReply.setAttribute('id','reply');
             labelMailContentButtonArchived.setAttribute('class','btn btn-outline-primary cstm-mrgn');
+            labelMailContentButtonArchived.setAttribute('id','archive');
             labelMailContentDivCard.setAttribute('class','card');
             labelMailContentDivCardBody.setAttribute('class','card-body');
 
@@ -133,7 +175,7 @@ function load_mailbox(mailbox) {
             labelMailContentTimestamp.innerHTML = '<label style="font-weight : bold">Timestamp :&nbsp;</label>' + emailContents.timestamp;
             labelMailContentButtonReply.innerHTML = 'Reply';
             labelMailContentButtonArchived.innerHTML = 'Archive';
-            labelMailContentDivCardBody.innerHTML = emailContents.body;
+            labelMailContentDivCardBody.innerHTML = emailContents.body.replace(/\n\r?/g, '<br />');
 
             labelMailContentDivCard.append(labelMailContentDivCardBody);
             emailView.append(labelMailContentButtonReply);
@@ -145,6 +187,9 @@ function load_mailbox(mailbox) {
             emailView.append(labelMailContentDivCard);
 
             console.log(emailContents);
+
+            document.querySelector('#reply').addEventListener('click' , () => reply_email(emailContents) );
+
           });
         }
       });
