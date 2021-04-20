@@ -136,8 +136,6 @@ function load_mailbox(mailbox) {
         div.append(a);
       });
 
-      console.log(email);
-
       document.querySelectorAll('.inbx-clck').forEach( function(a){
         a.onclick = function(){
           
@@ -210,8 +208,6 @@ function load_mailbox(mailbox) {
             emailView.append(labelMailContentSubject);
             emailView.append(labelMailContentTimestamp);
             emailView.append(labelMailContentDivCard);
-
-            console.log(emailContents);
 
             document.querySelector('#reply').addEventListener('click' , () => reply_email(emailContents) );
             document.querySelector('#archive').addEventListener('click' , () => archive_email(id,archiveStateId) );
