@@ -112,7 +112,7 @@ function archive_email(id, archiveStateId){
   })
   .then(response => response.json())
   .then( result => {
-    console.log(result);
+    
     if( result.message ){
       document.querySelector('.error').style.display = "none";
       document.querySelector('.error').innerHTML = '';
