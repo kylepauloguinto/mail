@@ -3,7 +3,7 @@
 <div class="container-glossy-div main-div">
   <div class="row header">
     <div class="col-10 row email">
-      <label>kylepauloguinto@testing.com</label>
+      <label>{{ request.user.email }}</label>
     </div>
     <div class="col-2 logout">
       <a class="btn btn-sm" href="{% url 'logout' %}">Log out</a>
