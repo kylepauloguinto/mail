@@ -1,4 +1,4 @@
-{% extends "mail/layout.html" %} {% block body %}
+{% extends "mail/layout.html" %} {% load static %} {% block body %}
 
 <div class="container-glossy-div login-div">
   <div class="login">
@@ -38,11 +38,13 @@
       Already have an account? <a href="{% url 'login' %}">Log In here.</a>
     </div>
     <input
-      class="btn btn-primary login-button"
+      class="btn submit-button login-button"
       type="submit"
       value="Register"
     />
   </form>
 </div>
 
+{% endblock %}{% block script %}
+<script src="{% static 'mail/inbox.js' %}"></script>
 {% endblock %}
