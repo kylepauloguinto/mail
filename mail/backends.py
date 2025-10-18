@@ -12,14 +12,14 @@ class EmailOrUsernameBackend(ModelBackend):
         
         # Accept either 'email' or 'username' keyword
         username = username or kwargs.get('email')
-        
+
         # 'username' will contain whatever you passed into authenticate(username=...)
         if username is None or password is None:
             return None
 
         # Try to find user by email or username
         try:
-            user = User.objects.get(email=username)
+            user = User.objects.filter(email=username).first()
         except User.DoesNotExist:
             try:
                 user = User.objects.get(username=username)

@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import connection
+from time import time
 
 from .models import User, Email
 
@@ -134,8 +136,12 @@ def login_view(request):
         # Attempt to sign user in
         email = request.POST["email"].lower()
         password = request.POST["password"]
+        
+        start = time()
         user = authenticate(request, email=email, password=password)
-
+        print("SQL:", connection.queries)
+        print("Elapsed:", time() - start)
+        
         # Check if authentication successful
         if user is not None:
             login(request, user, backend='mail.backends.EmailOrUsernameBackend')
