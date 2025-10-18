@@ -3,7 +3,10 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    email = models.EmailField(unique=True, db_index=True)
+    
+    def __str__(self):
+        return self.email
 
 
 class Email(models.Model):

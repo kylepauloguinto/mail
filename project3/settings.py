@@ -126,3 +126,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mail/static'),
 ]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',   # keep the default
+    'mail.backends.EmailOrUsernameBackend',     # add this line
+]

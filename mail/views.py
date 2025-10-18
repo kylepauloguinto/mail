@@ -36,7 +36,7 @@ def compose(request):
         return JsonResponse({
             "error": "At least one recipient required."
         }, status=400)
-    print("hi")
+
     # Convert email addresses to users
     recipients = []
     for email in emails:
@@ -132,13 +132,13 @@ def login_view(request):
     if request.method == "POST":
 
         # Attempt to sign user in
-        email = request.POST["email"]
+        email = request.POST["email"].lower()
         password = request.POST["password"]
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, email=email, password=password)
 
         # Check if authentication successful
         if user is not None:
-            login(request, user)
+            login(request, user, backend='mail.backends.EmailOrUsernameBackend')
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "mail/login.html", {
@@ -155,7 +155,7 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
-        email = request.POST["email"]
+        email = request.POST["email"].lower()
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -170,11 +170,10 @@ def register(request):
             user = User.objects.create_user(email, email, password)
             user.save()
         except IntegrityError as e:
-            print(e)
             return render(request, "mail/register.html", {
                 "message": "Email address already taken."
             })
-        login(request, user)
+        login(request, user, backend='mail.backends.EmailOrUsernameBackend')
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "mail/register.html")
