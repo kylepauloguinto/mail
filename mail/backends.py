@@ -1,5 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
+from .utils import get_user_by_email
 
 User = get_user_model()
 
@@ -19,7 +20,7 @@ class EmailOrUsernameBackend(ModelBackend):
 
         # Try to find user by email or username
         try:
-            user = User.objects.filter(email=username).first()
+            user = get_user_by_email(username)
         except User.DoesNotExist:
             try:
                 user = User.objects.get(username=username)

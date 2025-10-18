@@ -95,8 +95,16 @@
   </head>
   <body>
     <!-- Video background -->
-    <video class="bg-video" autoplay muted loop playsinline preload="none">
-      <source src="{% static 'mail/bg.MP4' %}" type="video/mp4" />
+    <video
+      class="bg-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster="{% static 'mail/bg-poster.png' %}"
+    >
+      <source src="{% static 'mail/bg.webm' %}" type="video/mp4" />
     </video>
     {% block body %} {% endblock %}
   </body>
