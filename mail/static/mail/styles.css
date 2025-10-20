@@ -1,5 +1,5 @@
 body {
-  background: url("bg.mp4") no-repeat center center/cover;
+  background: url("bg.webm") no-repeat center center/cover;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -123,6 +123,9 @@ textarea {
   cursor: pointer;
 }
 
+h3 {
+  margin-top: 20px !important;
+}
 .nav,
 h3,
 h5 {
