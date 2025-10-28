@@ -139,8 +139,6 @@ def login_view(request):
         
         start = time()
         user = authenticate(request, email=email, password=password)
-        print("SQL:", connection.queries)
-        print("Elapsed:", time() - start)
         
         # Check if authentication successful
         if user is not None:

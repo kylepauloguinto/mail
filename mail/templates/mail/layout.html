@@ -96,7 +96,7 @@
       type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0/js/tempusdominus-bootstrap-4.min.js"
     ></script>
-    {% block script %} {% endblock %}
+    <script src="{% static 'mail/inbox.js' %}?v={{ STATIC_VERSION }}"></script>
   </head>
   <body>
     <!-- Video background -->
@@ -185,5 +185,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  
+  <!-- Loader -->
+  <div class="loader-overlay" id="loader">
+    <div class="loader" ></div>
   </div>
 </html>

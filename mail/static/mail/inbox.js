@@ -19,6 +19,19 @@ document.addEventListener("DOMContentLoaded", function () {
       $(".eng").hide();
     }
   });
+
+  const form = document.getElementById("login-form");
+  const loader = document.getElementById("loader");
+  const button = form.querySelector("button");
+
+  form.addEventListener("submit", () => {
+    // show loader
+    loader.style.display = "flex";
+    button.disabled = true;
+  });
+
+
+
   // Use buttons to toggle between views
   document
     .querySelector("#inbox")
