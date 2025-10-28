@@ -20,16 +20,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  const form = document.getElementById("login-form");
-  const loader = document.getElementById("loader");
-  const button = form.querySelector("button");
+  if (window.location.pathname.endsWith("/login")) {
+    const form = document.getElementById("login-form");
+    const loader = document.getElementById("loader");
+    const button = form.querySelector("button");
 
-  form.addEventListener("submit", () => {
-    // show loader
-    loader.style.display = "flex";
-    button.disabled = true;
-  });
-
+    form.addEventListener("submit", () => {
+      // show loader
+      loader.style.display = "flex";
+      button.disabled = true;
+    });
+  }
 
 
   // Use buttons to toggle between views
