@@ -126,10 +126,10 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: if you have additional static folders
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'mail/static'),
-]
+# # Optional: if you have additional static folders
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'mail/static'),
+# ]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',   # keep the default
