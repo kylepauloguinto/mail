@@ -5,7 +5,9 @@
   </div>
 
   {% if message %}
-  <div>{{ message }}</div>
+  <div class="alert alert-success" role="alert">
+    <div>{{ message }}</div>
+  </div>
   {% endif %}
 
   <form action="{% url 'login' %}" method="post" id="login-form">
