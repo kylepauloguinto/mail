@@ -136,4 +136,4 @@ AUTHENTICATION_BACKENDS = [
     'mail.backends.EmailOrUsernameBackend',     # add this line
 ]
 
-STATIC_VERSION = '1.0.2'
+STATIC_VERSION = '1.0.3'

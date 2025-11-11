@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/static/mail/service-worker.js")
+      .then((reg) => console.log("Service Worker registered", reg))
+      .catch((err) => console.log("Service Worker error", err));
+  }
   if (window.location.pathname.endsWith("/register")) {
     $("#autoModal").modal("show");
   }
@@ -31,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
       button.disabled = true;
     });
   }
-
 
   // Use buttons to toggle between views
   document
